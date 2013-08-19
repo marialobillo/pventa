@@ -18,10 +18,11 @@ if(isset($_POST['username']) && isset($_POST['password'])){
 
 	if($registro > 0 )
 	{
-		echo "Acceso correcto";
+		//echo "Acceso correcto";
 		while($row =mysql_fetch_array($re_consulta)){
 			$id_pventa = $row['id_pventa'];
-			echo "MI PVENTA -- >". $id_pventa;
+			//echo "MI PVENTA -- >". $id_pventa;
+			$_SESSION['id_pventa'] = $id_pventa;
 		}
 
 	}else{
@@ -108,8 +109,8 @@ if(isset($_GET['estado']))
 		</section>
 <?php
 	//conectar con base datos y tabla de select
-$i=1;
-	if($i == 1){
+
+	if(isset($_SESSION['id_pventa'])){
 
 
 	
@@ -139,9 +140,10 @@ $i=1;
 			on pike_virtuemart_orders.virtuemart_paymentmethod_id = pike_virtuemart_paymentmethods_es_es.virtuemart_paymentmethod_id
 			INNER JOIN pike_virtuemart_shipmentmethods_es_es
 			on pike_virtuemart_orders.virtuemart_shipmentmethod_id = pike_virtuemart_shipmentmethods_es_es.virtuemart_shipmentmethod_id
-			where pike_virtuemart_orders.created_on >= '".$inicio." 0:0:0' AND pike_virtuemart_orders.created_on <= '".$fin ."0:0:0'";
+			where pike_virtuemart_orders.created_on >= '".$inicio." 0:0:0' AND pike_virtuemart_orders.created_on <= '".$fin ."0:0:0' AND ".
+			"pike_virtuemart_shipmentmethods_es_es.virtuemart_shipmentmethod_id=". $_SESSION['id_pventa'];
 
-
+			//echo "El ip de venta es -> " . $_SESSION['id_pventa'];
 			$result = mysql_query($sql, $conexion);
 
 
