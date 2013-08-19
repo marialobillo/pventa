@@ -2,11 +2,31 @@
 session_start();
 include 'db_local.php';
 
-if(isset($_POST['user']) && isset($_POST['pass'])){
+if(isset($_POST['username']) && isset($_POST['password'])){
 
+	$user = $_POST['username'];
+	$pass = $_POST['password'];
 
+	$consulta = "SELECT id_pventa FROM pike_virtuemart_pventa 
+				WHERE user='".$user."' AND pass='".$pass. "'";
 
+	//echo $consulta;
 
+	$re_consulta = mysql_query($consulta);
+
+	$registro = mysql_num_rows($re_consulta);
+
+	if($registro > 0 )
+	{
+		echo "Acceso correcto";
+		while($row =mysql_fetch_array($re_consulta)){
+			$id_pventa = $row['id_pventa'];
+			echo "MI PVENTA -- >". $id_pventa;
+		}
+
+	}else{
+		echo "ERROR LOGIN";
+	}
 }
 
 
@@ -88,7 +108,8 @@ if(isset($_GET['estado']))
 		</section>
 <?php
 	//conectar con base datos y tabla de select
-	if(isset($_SESSION['conectado'])  && $_SESSION['conectado'] == true || $_SESSION['enlinea'] == true){
+$i=1;
+	if($i == 1){
 
 
 	
