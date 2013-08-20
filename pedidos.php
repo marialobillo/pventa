@@ -1,6 +1,7 @@
 <?php
 session_start();
 include 'db_local.php';
+require('class.phpmailer.php');
 
 if(isset($_POST['username']) && isset($_POST['password'])){
 
@@ -45,11 +46,55 @@ if(isset($_GET['estado']))
 		
 		$result = mysql_query($sql, $conexion);
 
+		$order_id = $_GET['id'];
+		$estado = $_GET['estado'];
+
+
+
+
 		if($result)
 		{
-			//ENVIO DEL E-MAIL
+			if($estado == 'R' || $estado == 'T'){
+				//OBTENER DATOS EL USER
+					$user_sql = 'select pike_users.id, pike_users.email, pike_users.name 
+				from pike_virtuemart_orders 
+				INNER JOIN pike_users
+				ON pike_virtuemart_orders.virtuemart_user_id = pike_users.id
+				where virtuemart_order_id=' . $order_id;
+
+				$re_user = mysql_query($user_sql);
+
+				while($row_user = mysql_fetch_array($urser_sql)){
+					$destino = $row_user['email'];
+					$user_name = $row_user['name'];
+
+					//ENVIO DE EMAIL
 
 
+						$mail->AddReplyTo($origen, 'Mola Market Pedidos');
+						$mail->AddAddress($destino, 'User Name');
+						$mail->SetFrom($origen, 'Mola Market Pedidos');
+						
+						 
+						$mail->Subject  = $asunto;
+						$mail->Body     = $cuerpo;
+						$mail->WordWrap = 50;
+
+						 
+						if(!$mail->Send()) {
+							echo 'Message was not sent.';
+							echo 'Mailer error: ' . $mail->ErrorInfo;
+						} else {
+							echo 'Message has been sent.';
+						}
+
+
+				}
+				
+
+
+
+			}
 
 		}
 	}//FIN DE CAMBIO DE ESTADO
