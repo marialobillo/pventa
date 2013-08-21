@@ -67,13 +67,18 @@ if(isset($_GET['estado']))
 				while($row_user = mysql_fetch_array($urser_sql)){
 					$destino = $row_user['email'];
 					$user_name = $row_user['name'];
+					$origen = 'pedidos@molamarket.com';
+					$cuerpo = '';
+
+					if($estado == 'R') $asunto = 'Recepcionado en PM';
+					if($estado == 'T') $asunto = 'Entregado en PM';
 
 					//ENVIO DE EMAIL
 
 
 						$mail->AddReplyTo($origen, 'Mola Market Pedidos');
-						$mail->AddAddress($destino, 'User Name');
-						$mail->SetFrom($origen, 'Mola Market Pedidos');
+						$mail->AddAddress($destino, $user_name);
+						$mail->SetFrom($origen, 'Mola Market');
 						
 						 
 						$mail->Subject  = $asunto;
